@@ -3,7 +3,7 @@ package com.example.userDirectoryApp.network
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserResponce(
+data class UserResponse(
     val total: Int,
     val users: List<User>
 )
