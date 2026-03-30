@@ -45,9 +45,9 @@ class UserDirectoryViewModel : ViewModel() {
      * Gets User photos information from the User API Retrofit service and updates the
      * [UserPhoto] [List] [MutableList].
      */
-    fun getUserPhotos() {
+    private fun getUserPhotos() {
         viewModelScope.launch {
-            try {
+            /*userUiState = */try {
                 val listResult = DirectoryApi.retrofitService.getPhotos()
                 userUiState = UserUiState.Success(
                     "Success: ${listResult.users.size} User photos retrieved")
