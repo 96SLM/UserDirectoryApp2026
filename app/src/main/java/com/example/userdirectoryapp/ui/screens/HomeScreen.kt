@@ -80,7 +80,7 @@ fun ResultScreen(photos: String, modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
         modifier = modifier
     ) {
-        //Text(text = photos)
+        Text(text = photos)
 //        AsyncImage(
 //            model = Image
 //        )
