@@ -20,8 +20,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.userDirectoryApp.network.DirectoryApi
+import com.example.userDirectoryApp.data.NetworkUserProfilesRepository
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface UserUiState {
@@ -43,16 +44,20 @@ class UserDirectoryViewModel : ViewModel() {
 
     /**
      * Gets User photos information from the User API Retrofit service and updates the
-     * [UserPhoto] [List] [MutableList].
+     * [UserDirectory] [List] [MutableList].
      */
     private fun getUserPhotos() {
         viewModelScope.launch {
             /*userUiState = */try {
-                val listResult = DirectoryApi.retrofitService.getPhotos()
+//                val listResult = DirectoryApi.retrofitService.getPhotos()
+                val userProfilesRepository = NetworkUserProfilesRepository()
+                val listResult = userProfilesRepository.getPhotos()
                 userUiState = UserUiState.Success(
                     "Success: ${listResult.users.size} User photos retrieved")
-            }catch (e: IOException) {
+            }catch (_: IOException) {
                 userUiState = UserUiState.Error
+            }catch (_: HttpException) {
+            userUiState = UserUiState.Error
             }
         }
     }
