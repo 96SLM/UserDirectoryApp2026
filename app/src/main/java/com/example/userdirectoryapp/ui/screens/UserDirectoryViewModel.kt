@@ -49,7 +49,6 @@ class UserDirectoryViewModel : ViewModel() {
     private fun getUserPhotos() {
         viewModelScope.launch {
             /*userUiState = */try {
-//                val listResult = DirectoryApi.retrofitService.getPhotos()
                 val userProfilesRepository = NetworkUserProfilesRepository()
                 val listResult = userProfilesRepository.getPhotos()
                 userUiState = UserUiState.Success(
