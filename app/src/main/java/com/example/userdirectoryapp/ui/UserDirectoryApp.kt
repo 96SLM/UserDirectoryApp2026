@@ -48,7 +48,8 @@ fun UserDirectoryApp() {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-            val userDirectoryViewModel: UserDirectoryViewModel = viewModel()
+            val userDirectoryViewModel: UserDirectoryViewModel =
+                viewModel(factory = UserDirectoryViewModel.Factory)
             HomeScreen(
                 userUiState = userDirectoryViewModel.userUiState,
             )

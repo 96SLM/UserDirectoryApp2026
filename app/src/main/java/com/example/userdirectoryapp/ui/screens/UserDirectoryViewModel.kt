@@ -19,8 +19,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import com.example.userDirectoryApp.data.NetworkUserProfilesRepository
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.userDirectoryApp.UserDirectoryApplication
+import com.example.userDirectoryApp.data.UserProfilesRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -30,7 +35,8 @@ sealed interface UserUiState {
     object Error : UserUiState
     object Loading : UserUiState
 }
-class UserDirectoryViewModel : ViewModel() {
+class UserDirectoryViewModel(private val userProfilesRepository: UserProfilesRepository) :
+    ViewModel() {
     /** The mutable State that stores the status of the most recent request */
     var userUiState: UserUiState by mutableStateOf(UserUiState.Loading)
         private set
@@ -49,7 +55,6 @@ class UserDirectoryViewModel : ViewModel() {
     private fun getUserPhotos() {
         viewModelScope.launch {
             /*userUiState = */try {
-                val userProfilesRepository = NetworkUserProfilesRepository()
                 val listResult = userProfilesRepository.getPhotos()
                 userUiState = UserUiState.Success(
                     "Success: ${listResult.users.size} User photos retrieved")
@@ -60,5 +65,14 @@ class UserDirectoryViewModel : ViewModel() {
             }
         }
     }
-}
 
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+          initializer {
+              val application = (this[APPLICATION_KEY] as UserDirectoryApplication)
+              val userProfilesRepository = application.container.userProfilesRepository
+              UserDirectoryViewModel(userProfilesRepository = userProfilesRepository)
+          }
+        }
+    }
+}/*the end brace of the UserDirectoryViewModel class*/
