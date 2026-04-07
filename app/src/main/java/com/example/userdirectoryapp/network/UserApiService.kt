@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface UserApiService {
     @GET ("users?limit=20")
-    suspend fun getPhotos(): UserResponse
+    suspend fun getUserPhotos(): UserResponse
 }
 

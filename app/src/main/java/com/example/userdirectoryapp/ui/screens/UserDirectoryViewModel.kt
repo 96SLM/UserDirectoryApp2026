@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import coil.util.CoilUtils.result
 import com.example.userDirectoryApp.UserDirectoryApplication
 import com.example.userDirectoryApp.data.UserProfilesRepository
 import kotlinx.coroutines.launch
@@ -54,14 +55,15 @@ class UserDirectoryViewModel(private val userProfilesRepository: UserProfilesRep
      */
     private fun getUserPhotos() {
         viewModelScope.launch {
-            /*userUiState = */try {
-                val listResult = userProfilesRepository.getPhotos()
+            try {
+                val result = userProfilesRepository.getUserPhotos()
                 userUiState = UserUiState.Success(
-                    "Success: ${listResult.users.size} User photos retrieved")
+                    "First User image URL: ${result.users[0].id}"
+                )
             }catch (_: IOException) {
                 userUiState = UserUiState.Error
             }catch (_: HttpException) {
-            userUiState = UserUiState.Error
+                userUiState = UserUiState.Error
             }
         }
     }
