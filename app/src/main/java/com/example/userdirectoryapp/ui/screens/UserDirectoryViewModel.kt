@@ -24,15 +24,16 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import coil.util.CoilUtils.result
 import com.example.userDirectoryApp.UserDirectoryApplication
 import com.example.userDirectoryApp.data.UserProfilesRepository
+import com.example.userDirectoryApp.network.User
+import com.example.userDirectoryApp.network.UserResponse
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface UserUiState {
-    data class Success(val photos: String) : UserUiState
+    data class Success(val profile: UserResponse) : UserUiState
     object Error : UserUiState
     object Loading : UserUiState
 }
@@ -51,15 +52,16 @@ class UserDirectoryViewModel(private val userProfilesRepository: UserProfilesRep
 
     /**
      * Gets User photos information from the User API Retrofit service and updates the
-     * [UserDirectory] [List] [MutableList].
+     * [UserResponse] [List] [MutableList].
      */
     private fun getUserPhotos() {
         viewModelScope.launch {
             try {
-                val result = userProfilesRepository.getUserPhotos()
-                userUiState = UserUiState.Success(
-                    "First User image URL: ${result.users[0].id}"
-                )
+                userUiState = UserUiState.Success(userProfilesRepository.getUserPhotos())
+//               val result = userProfilesRepository.getUserPhotos()
+//               userUiState = UserUiState.Success(
+//                    "First User image URL: ${result.users[0]}"
+//                )
             }catch (_: IOException) {
                 userUiState = UserUiState.Error
             }catch (_: HttpException) {

@@ -27,12 +27,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.userDirectoryApp.R
+import com.example.userDirectoryApp.network.UserResponse
 import com.example.userDirectoryApp.ui.theme.UserDirectoryPhotosTheme
+
+@Composable
+fun UserProfileCard(profile: UserResponse, modifier: Modifier = Modifier) {
+    AsyncImage(
+        model = ImageRequest.Builder(context = LocalContext.current)
+            .data(profile.users[0].image)
+            .crossfade(true)
+            .build(),
+        contentDescription = stringResource(R.string.placeholder_result),
+        modifier = Modifier.fillMaxWidth()
+    )
+}
 
 @Composable
 fun HomeScreen(
@@ -41,10 +57,7 @@ fun HomeScreen(
 ) {
     when (userUiState) {
         is UserUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is UserUiState.Success -> ResultScreen(
-            userUiState.photos, modifier = modifier.fillMaxWidth()
-        )
-
+        is UserUiState.Success -> UserProfileCard(profile = userUiState.profile, modifier.fillMaxSize())
         is UserUiState.Error -> ErrorScreen( modifier = modifier.fillMaxSize())
     }
 }
