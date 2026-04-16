@@ -20,12 +20,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -40,17 +45,31 @@ import com.example.userDirectoryApp.ui.theme.UserDirectoryPhotosTheme
 
 @Composable
 fun UserProfileCard(profile: UserResponse, modifier: Modifier = Modifier) {
-    AsyncImage(
-        model = ImageRequest.Builder(context = LocalContext.current)
-            .data(profile.users[0].image)
-            .crossfade(true)
-            .build(),
-        error = painterResource(R.drawable.ic_broken_image),
-        placeholder = painterResource(R.drawable.loading_img),
-        contentDescription = stringResource(R.string.placeholder_result),
-        contentScale = ContentScale.Crop
-//        ,modifier = Modifier.fillMaxWidth()
-    )
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(8.dp)
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current)
+                .data(profile.users[0].image)
+                .crossfade(true)
+                .build(),
+            error = painterResource(R.drawable.ic_broken_image),
+            placeholder = painterResource(R.drawable.loading_img),
+            contentDescription = stringResource(R.string.placeholder_result),
+            contentScale = ContentScale.Crop
+    //        ,modifier = Modifier.fillMaxWidth()
+        )
+        Text(
+            text = profile.users[0].firstName,
+            textAlign =
+        )
+    }
 }
 
 @Composable
@@ -110,3 +129,11 @@ fun ResultScreenPreview() {
         ResultScreen(stringResource(R.string.placeholder_result))
     }
 }
+//
+//@Preview
+//@Composable
+//fun UserProfileCardPreview() {
+//    UserDirectoryPhotosTheme {
+//        UserProfileCard()
+//    }
+//}
