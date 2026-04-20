@@ -19,18 +19,21 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -40,8 +43,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.userDirectoryApp.R
+import com.example.userDirectoryApp.network.User
 import com.example.userDirectoryApp.network.UserResponse
-import com.example.userDirectoryApp.ui.theme.UserDirectoryPhotosTheme
+import com.example.userDirectoryApp.ui.theme.UserDirectoryTheme
 
 @Composable
 fun UserProfileCard(profile: UserResponse, modifier: Modifier = Modifier) {
@@ -54,21 +58,56 @@ fun UserProfileCard(profile: UserResponse, modifier: Modifier = Modifier) {
             .height(100.dp)
             .padding(8.dp)
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current)
-                .data(profile.users[0].image)
-                .crossfade(true)
-                .build(),
-            error = painterResource(R.drawable.ic_broken_image),
-            placeholder = painterResource(R.drawable.loading_img),
-            contentDescription = stringResource(R.string.placeholder_result),
-            contentScale = ContentScale.Crop
-    //        ,modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-            text = profile.users[0].firstName,
-            textAlign =
-        )
+        Row {
+            Box {
+                AsyncImage(
+                    //profile image
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(profile.users[0].image)
+                        .crossfade(true)
+                        .build(),
+                    error = painterResource(R.drawable.ic_broken_image),
+                    placeholder = painterResource(R.drawable.loading_img),
+                    contentDescription = stringResource(R.string.placeholder_result),
+                    contentScale = ContentScale.Crop
+                    ,modifier = modifier
+                        .size(50.dp)
+                        .aspectRatio(1f)
+                )
+            }
+             Column {
+                 Row() {
+                     Text(
+                         //First name line
+//                         model = ImageRequest.Builder(context = LocalContext.current)
+//                             .data(profile.users[0].firstName)
+//                             .crossfade(true)
+//                             .build(),
+                         text = profile.users[0].firstName + profile.users[0].lastName,
+                         modifier = Modifier.padding(
+                             start = 16.dp,
+                             top = 16.dp,
+                             bottom = 16.dp
+                         )
+                             .wrapContentWidth()
+                     )
+//                     Text(
+//                         //Last name line
+////                         model = ImageRequest.Builder(context = LocalContext.current)
+////                             .data(profile.users[0].lastName)
+////                             .crossfade(true)
+////                             .build(),
+//                         text = profile.users[0].lastName,
+//
+//                     )
+                 }
+                 Text(
+                     //Email address line
+                     text = profile.users[0].email,
+                     modifier = Modifier.padding( start = 16.dp)
+                 )
+             }
+        }
     }
 }
 
@@ -116,24 +155,22 @@ fun ResultScreen(photos: String, modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         Text(text = photos)
-//        AsyncImage(
-//            model = Image
-//        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ResultScreenPreview() {
-    UserDirectoryPhotosTheme {
+    UserDirectoryTheme {
         ResultScreen(stringResource(R.string.placeholder_result))
     }
 }
-//
-//@Preview
-//@Composable
-//fun UserProfileCardPreview() {
-//    UserDirectoryPhotosTheme {
-//        UserProfileCard()
-//    }
-//}
+
+@Preview
+@Composable
+fun UserProfileCardPreview() {
+    UserDirectoryTheme {
+        val profile = null
+        UserProfileCard(profile = profile)
+    }
+}
